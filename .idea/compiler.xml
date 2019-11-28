@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="nio-demo" />
         <module name="netty-demo" />
+        <module name="interview" />
       </profile>
     </annotationProcessing>
   </component>

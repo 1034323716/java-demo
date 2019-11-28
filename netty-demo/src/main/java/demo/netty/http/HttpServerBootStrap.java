@@ -16,16 +16,22 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
 /**
+ * BootStrap是引导的意思
  * 自定义http服务端
  *
  * @author JiYunFei
  */
-public class ServerBootStrap {
+public class HttpServerBootStrap {
     public static void main(String[] args) {
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
 
         ServerBootstrap bootstrap = new ServerBootstrap();
+
+        // group用来设置主从reactor
+        // channel用来设置一个服务器端的通道实现
+        // handler用来添加到boss（主reactor）的处理器
+        // childHandler用来添加到worker对读写处理的handler
         bootstrap.group(boss, worker)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -39,7 +45,7 @@ public class ServerBootStrap {
                                     HttpRequest request = (HttpRequest) httpObject;
                                     System.out.println("receive:\n" + request.toString());
 
-                                    ByteBuf content = Unpooled.copiedBuffer("hello, 你的uri是：" + request.uri(), CharsetUtil.UTF_8);
+                                    ByteBuf content = Unpooled.copiedBuffer("hello, 您的uri是：" + request.uri(), CharsetUtil.UTF_8);
                                     FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);
 
                                     // 告诉浏览器编码格式
@@ -55,6 +61,7 @@ public class ServerBootStrap {
                 });
 
         try {
+            // 绑定端口返回一个异步对象，可以给这个对象添加监听，监听到了会执行lister内方法
             ChannelFuture future = bootstrap.bind(8002).sync();
             future.addListener(new GenericFutureListener<Future<? super Void>>() {
                 public void operationComplete(Future<? super Void> future) throws Exception {
@@ -65,6 +72,7 @@ public class ServerBootStrap {
                     }
                 }
             });
+            // 最好带上，监听关闭事件
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             boss.shutdownGracefully();
