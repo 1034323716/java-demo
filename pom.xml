@@ -12,6 +12,7 @@
         <module>nio-demo</module>
         <module>netty-demo</module>
         <module>interview</module>
+        <module>juc-demo</module>
     </modules>
 
 
