@@ -3,7 +3,7 @@ package test_volatile;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 测试可见行
+ * 测试可见性
  */
 public class TestVisibility {
     public static void main(String[] args) {

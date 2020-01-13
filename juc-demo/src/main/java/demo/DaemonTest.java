@@ -5,6 +5,7 @@ import java.util.concurrent.FutureTask;
 
 /**
  * 验证守护线程的特性
+ * 当进程中没有非demo的线程时，守护线程退出，进程退出
  */
 public class DaemonTest {
     public static void main2(String[] args) {
