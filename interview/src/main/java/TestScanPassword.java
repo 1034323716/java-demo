@@ -31,21 +31,26 @@ public class TestScanPassword {
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
+        System.out.println(encode(42224, "femoo.amigo.bjmcc.net", "8eaf1b54d77928666207e32b9046972b"));
+
+        // 解析端上带上来的鉴权头
+        System.out.println(Arrays.toString(fromHexString("f881aea4ea0b990aa959e554a8f0a815d8e5e36f")));//pc端上是一-2147483648L为uid算出来的
+        byte[] bytes =  new byte[]{39, -53, -61, 114, 89, -30, 60, 105, 109, -60, -83, -29, 54, -110, 33, -22, 98, -46, -30, -120};
+    }
+
+    private static String encode(long userId, String domain, String credential) throws NoSuchAlgorithmException {
         MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
-        String str = String.format("%s:%s", "femoo.amigo.bjmcc.net", "8eaf1b54d77928666207e32b9046972b");
+        String str = String.format("%s:%s", domain, credential);
         byte[] tmp = new byte[28];
-        copy(tmp, longToByte(42224), 0, 8);
+        copy(tmp, longToByte(userId), 0, 8);
         sha1.update(str.getBytes(Charset.forName("UTF-8")));
         copy(tmp, sha1.digest(), 8, 28);
         sha1.update(tmp);
         byte[] digest = sha1.digest();
         // 服务端计算出来的，redis存的value还需要md5
         System.out.println(Arrays.toString(digest));
-
-        // 解析端上带上来的鉴权头
-        System.out.println(Arrays.toString(fromHexString("f881aea4ea0b990aa959e554a8f0a815d8e5e36f")));//pc端上是一-2147483648L为uid算出来的
-        byte[] bytes =  new byte[]{39, -53, -61, 114, 89, -30, 60, 105, 109, -60, -83, -29, 54, -110, 33, -22, 98, -46, -30, -120};
         System.out.println(bytes2HexString(digest).toLowerCase());
+        return bytes2HexString(digest).toLowerCase();
     }
 
     /**
