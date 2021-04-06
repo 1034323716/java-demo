@@ -13,6 +13,7 @@
         <module>netty-demo</module>
         <module>interview</module>
         <module>juc-demo</module>
+        <module>guava-demo</module>
     </modules>
 
 
